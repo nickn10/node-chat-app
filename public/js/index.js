@@ -19,21 +19,42 @@ socket.on('newEmail', function(email) {
 
 socket.on('newMessage', function(message) {
 	let formattedTime = moment(message.createdAt).format('h:mm a')
-	let entry = document.createElement('li');
-	entry.appendChild(document.createTextNode(`${formattedTime} ${message.from}: ${message.text}`))
-	messages.appendChild(entry);
+	let template = document.querySelector('#message-template').innerHTML
+	let html = Mustache.render(template, {
+		text: message.text,
+		from: message.from,
+		createdAt: formattedTime
+		});
+
+	messages.insertAdjacentHTML('beforeend', html)
+
+	
+	// let entry = document.createElement('li');
+	// entry.appendChild(document.createTextNode(`${formattedTime} ${message.from}: ${message.text}`))
+	// messages.appendChild(entry);
 });
 
 socket.on('newLocationMessage', function(locationMessage) {
+	// dynamic templates
 	let formattedTime = moment(locationMessage.createdAt).format('h:mm a')
-	let entry = document.createElement('li');
-	let aTag = document.createElement('a');
-	aTag.setAttribute('href', locationMessage.url)
-	aTag.setAttribute('target', "_blank");
-	aTag.innerHTML = "My current location"
-	entry.appendChild(document.createTextNode(`${formattedTime} ${locationMessage.from}: `))
-	entry.appendChild(aTag)
-	messages.appendChild(entry);
+	let template = document.querySelector('#location-message-template').innerHTML
+	let html = Mustache.render(template, {
+		from: locationMessage.from,
+		url: locationMessage.url,
+		createdAt: formattedTime
+	})
+
+	messages.insertAdjacentHTML('beforeend', html)
+
+	//Creates new <li> for each message
+	// let entry = document.createElement('li');
+	// let aTag = document.createElement('a');
+	// aTag.setAttribute('href', locationMessage.url)
+	// aTag.setAttribute('target', "_blank");
+	// aTag.innerHTML = "My current location"
+	// entry.appendChild(document.createTextNode(`${formattedTime} ${locationMessage.from}: `))
+	// entry.appendChild(aTag)
+	// messages.appendChild(entry);
 })
 
 form.addEventListener('submit', function(event) {
