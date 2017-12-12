@@ -18,19 +18,20 @@ socket.on('newEmail', function(email) {
 })
 
 socket.on('newMessage', function(message) {
-	console.log('New message', message);
+	let formattedTime = moment(message.createdAt).format('h:mm a')
 	let entry = document.createElement('li');
-	entry.appendChild(document.createTextNode(`${message.from}: ${message.text}`))
+	entry.appendChild(document.createTextNode(`${formattedTime} ${message.from}: ${message.text}`))
 	messages.appendChild(entry);
 });
 
 socket.on('newLocationMessage', function(locationMessage) {
+	let formattedTime = moment(locationMessage.createdAt).format('h:mm a')
 	let entry = document.createElement('li');
 	let aTag = document.createElement('a');
 	aTag.setAttribute('href', locationMessage.url)
 	aTag.setAttribute('target', "_blank");
 	aTag.innerHTML = "My current location"
-	entry.appendChild(document.createTextNode(`${locationMessage.from}: `))
+	entry.appendChild(document.createTextNode(`${formattedTime} ${locationMessage.from}: `))
 	entry.appendChild(aTag)
 	messages.appendChild(entry);
 })
