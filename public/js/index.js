@@ -52,12 +52,19 @@ locationButton.addEventListener('click', function() {
 		return alert('Geolocation not supported by your current browser.');
 	}
 
+	locationButton.setAttribute('disabled', 'disabled');
+	locationButton.textContent = "Sending..."
+
 	navigator.geolocation.getCurrentPosition(function(position) {
+		locationButton.removeAttribute('disabled');
+		locationButton.textContent = "Share Location"
 		socket.emit('createLocationMessage', {
 			latitude: position.coords.latitude,
 			longitude: position.coords.longitude
 		});
 	}, function() {
+		locationButton.removeAttribute('disabled');
+		locationButton.textContent = "Share Location"
 		alert('Unable to fetch location.');
 	})
 })
