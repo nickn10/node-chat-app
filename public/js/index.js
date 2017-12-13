@@ -1,5 +1,27 @@
 var socket = io();
 
+function scrollToBottom() {
+  const newMessage = messages.lastElementChild;
+  const prevMessage = newMessage.previousElementSibling;
+ 
+  const clientHeight = messages.clientHeight;
+  const scrollTop = messages.scrollTop;
+  const scrollHeight = messages.scrollHeight;
+ 
+  const newMessageStyle = window.getComputedStyle(newMessage, null);
+  const newMessageHeight = parseInt(newMessageStyle.getPropertyValue("height"));
+  let prevMessageHeight = 0;
+  if (prevMessage) {
+    const prevMessageStyle = window.getComputedStyle(prevMessage, null);
+    prevMessageHeight = parseInt(prevMessageStyle.getPropertyValue("height"));
+  }
+ 
+  if ((clientHeight + scrollTop + newMessageHeight + prevMessageHeight) >= scrollHeight) {
+    messages.scrollTop = scrollHeight;
+  }
+}
+
+
 const form = document.querySelector('#message-form')
 const messages = document.querySelector('#messages')
 const locationButton = document.querySelector('#share-location')
@@ -18,6 +40,7 @@ socket.on('newEmail', function(email) {
 })
 
 socket.on('newMessage', function(message) {
+	// Using mustache.js
 	let formattedTime = moment(message.createdAt).format('h:mm a')
 	let template = document.querySelector('#message-template').innerHTML
 	let html = Mustache.render(template, {
@@ -27,15 +50,15 @@ socket.on('newMessage', function(message) {
 		});
 
 	messages.insertAdjacentHTML('beforeend', html)
-
-	
+	scrollToBottom();
+	// Not using mustache.js
 	// let entry = document.createElement('li');
 	// entry.appendChild(document.createTextNode(`${formattedTime} ${message.from}: ${message.text}`))
 	// messages.appendChild(entry);
 });
 
 socket.on('newLocationMessage', function(locationMessage) {
-	// dynamic templates
+	// Using mustache.js
 	let formattedTime = moment(locationMessage.createdAt).format('h:mm a')
 	let template = document.querySelector('#location-message-template').innerHTML
 	let html = Mustache.render(template, {
@@ -45,8 +68,8 @@ socket.on('newLocationMessage', function(locationMessage) {
 	})
 
 	messages.insertAdjacentHTML('beforeend', html)
-
-	//Creates new <li> for each message
+	scrollToBottom();
+	//Not using mustache.js 
 	// let entry = document.createElement('li');
 	// let aTag = document.createElement('a');
 	// aTag.setAttribute('href', locationMessage.url)
