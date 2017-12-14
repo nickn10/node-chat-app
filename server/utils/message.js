@@ -8,12 +8,10 @@ const generateMessage = (from, text) => {
 	};
 };
 
-const generateLocationMessage = (from, latitude, longitude) => {
-	return {
-		from,
-		url: `https://www.google.com/maps?q=${latitude},${longitude}`,
-		createdAt: moment().valueOf()		
-	}
+const generateLocationMessage = (user, latitude, longitude) => {
+	user.location.url = `https://www.google.com/maps?q=${latitude},${longitude}`
+	user.location.text = 'location'	
+	return {user, createdAt: moment().valueOf()}
 }
 
 module.exports = {generateMessage, generateLocationMessage}

@@ -44,14 +44,20 @@ io.on('connection', (socket) => {
 
 	socket.on('createMessage', (message, callback) => {
 		let user = chatUsers.getUser(socket.id);
-		message.from = user.name;
-		io.emit('newMessage', generateMessage(message.from, message.text));
-		// callback('This is from the server.');
-		// socket.broadcast.emit('newMessage', generateMessage(message.from, message.text));
+
+		if(user && isRealString(message.text)) {
+			io.to(user.room).emit('newMessage', generateMessage(user.name, message.text), user.location);
+		}
+		callback();
 	});
 
 	socket.on('createLocationMessage', (coords) => {
-		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude))
+		let user = chatUsers.getUser(socket.id);
+
+		if (user) {	
+			io.to(user.room).emit('newLocationMessage', generateLocationMessage(user, coords.latitude, coords.longitude))
+			io.to(user.room).emit('updateUsersList', chatUsers.getUsersList(user.room))
+		}
 	})
 
 	socket.on('disconnect', () => {

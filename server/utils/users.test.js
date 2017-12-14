@@ -29,14 +29,23 @@ describe('Users', () => {
 			name: 'Nick',
 			room: 'Psych'
 		}
+		let addedUser = {
+			id: '123',
+			name: 'Nick',
+			room: 'Psych',
+			location: {
+				url: '',
+				text: ''
+			}
+		}
 		let resUser = chatUsers.addUser(user.id, user.name, user.room);
-		expect(resUser).toEqual(user)
-		expect(chatUsers.users).toContainEqual(user);
+		expect(resUser).toEqual(addedUser)
+		expect(chatUsers.users).toContainEqual(addedUser);
 	})
 
 	it('should return user names for specified room', () => {
 		let userList = chatUsers.getUsersList('The Office Fans')
-		expect(userList).toEqual(['Mike', 'Jen']);
+		expect(userList.length).toBe(2);
 	});
 
 	it('should not find a user', () => {

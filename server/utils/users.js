@@ -8,8 +8,9 @@ class Users {
 		this.users = []
 	}
 
-	addUser(id, name, room) {
-		const user = {id, name, room}
+	addUser(id, name, room, location) {
+		location = {url: '', text: ''}
+		const user = {id, name, room, location}
 		this.users.push(user)
 		return user;
 	}
@@ -25,7 +26,8 @@ class Users {
 	}
 	getUsersList(room) {
 		const users = this.users.filter((user) => user.room === room);
-		const namesArray = users.map((user) => user.name);
+		const namesArray = users.map((user) => {return {name: user.name, location: user.location}});
+		
 		return namesArray
 	}
 }

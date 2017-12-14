@@ -18,44 +18,50 @@ socket.on('connect', function() {
 });
 
 socket.on('disconnect', function() {
-	socket.emit('newMessage', generateMessage('Admin','Disconnected from server!'));
+	console.log('User Disconnected')
+	// socket.emit('newMessage', generateMessage('Admin','Disconnected from server!'));
 });
 
 socket.on('updateUsersList', function(users) {
-	console.log('Users list', users);
+	// console.log('Users list', users);
 	let ol = document.createElement('ol');
 
 	users.forEach(function(user) {
 		let li = document.createElement('li')
-		let newUser = document.createTextNode(user)
+		let newUser = document.createTextNode(user.name + " ")
+		let a = document.createElement('a')
+		a.setAttribute('href', user.location.url)
+		a.innerHTML = user.location.text
 		li.appendChild(newUser);
+		li.appendChild(a)
 		ol.appendChild(li)
 	});
 	usersList.innerHTML = ol.innerHTML
 })
 
-socket.on('newMessage', function(message) {
+socket.on('newMessage', function(message,) {
 	// Using mustache.js
 	let formattedTime = moment(message.createdAt).format('h:mm a')
 	let template = document.querySelector('#message-template').innerHTML
 	let html = Mustache.render(template, {
 		text: message.text,
 		from: message.from,
-		createdAt: formattedTime
+		createdAt: formattedTime,
 		});
 
 	messages.insertAdjacentHTML('beforeend', html)
 	scrollToBottom();
 });
 
-socket.on('newLocationMessage', function(locationMessage) {
+socket.on('newLocationMessage', function(message) {
 	// Using mustache.js
-	let formattedTime = moment(locationMessage.createdAt).format('h:mm a')
+	let formattedTime = moment(message.createdAt).format('h:mm a')
 	let template = document.querySelector('#location-message-template').innerHTML
 	let html = Mustache.render(template, {
-		from: locationMessage.from,
-		url: locationMessage.url,
-		createdAt: formattedTime
+		from: message.user.name,
+		url: message.user.location.url,
+		text: message.user.location.text,
+		createdAt: formattedTime	
 	})
 
 	messages.insertAdjacentHTML('beforeend', html)
@@ -66,7 +72,6 @@ form.addEventListener('submit', function(event) {
 	event.preventDefault();
 	
 	socket.emit('createMessage', {
-		from: 'User',
 		text: form.message.value
 	}, function() {
 
@@ -94,4 +99,6 @@ locationButton.addEventListener('click', function() {
 		locationButton.textContent = "Share Location"
 		alert('Unable to fetch location.');
 	})
+
+
 })
