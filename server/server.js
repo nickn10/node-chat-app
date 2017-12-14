@@ -43,6 +43,8 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('createMessage', (message, callback) => {
+		let user = chatUsers.getUser(socket.id);
+		message.from = user.name;
 		io.emit('newMessage', generateMessage(message.from, message.text));
 		// callback('This is from the server.');
 		// socket.broadcast.emit('newMessage', generateMessage(message.from, message.text));
@@ -50,10 +52,6 @@ io.on('connection', (socket) => {
 
 	socket.on('createLocationMessage', (coords) => {
 		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude))
-	})
-
-	socket.on('createEmail', (newEmail) => {
-		console.log('createEmail', newEmail);
 	})
 
 	socket.on('disconnect', () => {
