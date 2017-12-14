@@ -10,7 +10,9 @@
 	
 	<div class="chat__sidebar">
 		<h3>People</h3>
-		<div id="users"></div>
+		<div id="users">
+			<!-- <ol id="users-list"></ol> -->
+		</div>
 	</div>
 
 	<div class="chat__main">
@@ -25,6 +27,13 @@
 		</div>
 		
 	</div>
+
+	<!-- <script id="users-template" type="text/template">
+		<li>
+			<p>{{user}}</p>
+		</li>
+	</script> -->
+
 
 	<script id="message-template" type="text/template">
 		<li class="message">
@@ -55,6 +64,7 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="/js/libs/moment.min.js"></script>
 	<script type="text/javascript" src="/js/libs/mustache.js"></script>
-	<script src="/js/chat.js"></script>
+	<script type="text/javascript" src="/js/libs/myLib.js"></script>
+	<script type="text/javascript" src="/js/chat.js"></script>
 </body>
 </html>
