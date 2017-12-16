@@ -9,14 +9,31 @@ const usersList = document.querySelector('#users');
 socket.on('connect', function() {
 	var params = getParams(window.location.search);
 
-	socket.emit('join', params, function(err) {
+	socket.emit('newUser', params, function(params, err) {
 		if(err) {
-			alert(err);
+			alert(err)
 			window.location.href = '/'
 		} else {
+					
+			socket.emit('join', params, function(err) {
+			if(err) {
+				alert(err);
+				window.location.href = '/'
+			} else {
 			
+			}
+		})
 		}
 	})
+
+	// socket.emit('join', params, function(err) {
+	// 	if(err) {
+	// 		alert(err);
+	// 		window.location.href = '/'
+	// 	} else {
+			
+	// 	}
+	// })
 });
 
 socket.on('disconnect', function() {

@@ -22,7 +22,6 @@ socket.on('updateActiveRooms', function(roomslist) {
 })
 
 activeRooms.onchange = function() {
-	roomInput[0].value = activeRooms.value;
 	form.submit()
 
 }

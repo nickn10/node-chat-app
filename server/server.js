@@ -21,6 +21,25 @@ io.on('connection', (socket) => {
 	
 	socket.emit('updateActiveRooms', chatUsers.groupUsersByRoom())
 
+	socket.on('newUser', (params, callback) => {
+		if(params.room ==="") {
+			let currentRooms = chatUsers.groupUsersByRoom();
+			
+			currentRooms.forEach((room) => {
+				for(const prop in room) {
+					if (prop === params.newRoom.toLowerCase()) {
+						return callback(params, 'Room name already taken.');
+					}
+				}
+			})
+
+			params.room = params.newRoom
+			callback(params)
+		} else {
+			callback(params)
+		}
+	})
+
 	socket.on('join', (params, callback) => {
 		let name = params.name;
 		let room = params.room.toLowerCase();
