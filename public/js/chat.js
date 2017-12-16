@@ -1,25 +1,26 @@
 var socket = io();
-
 const form = document.querySelector('#message-form')
 const messages = document.querySelector('#messages')
 const locationButton = document.querySelector('#share-location')
 const usersList = document.querySelector('#users');
 
+
+
 socket.on('connect', function() {
 	var params = getParams(window.location.search);
+
 	socket.emit('join', params, function(err) {
 		if(err) {
 			alert(err);
 			window.location.href = '/'
 		} else {
-			console.log('No error');
+			
 		}
 	})
 });
 
 socket.on('disconnect', function() {
 	console.log('User Disconnected')
-	// socket.emit('newMessage', generateMessage('Admin','Disconnected from server!'));
 });
 
 socket.on('updateUsersList', function(users) {
@@ -31,6 +32,7 @@ socket.on('updateUsersList', function(users) {
 		let newUser = document.createTextNode(user.name + " ")
 		let a = document.createElement('a')
 		a.setAttribute('href', user.location.url)
+		a.setAttribute('target', "_blank")
 		a.innerHTML = user.location.text
 		li.appendChild(newUser);
 		li.appendChild(a)
@@ -68,37 +70,40 @@ socket.on('newLocationMessage', function(message) {
 	scrollToBottom();
 })
 
-form.addEventListener('submit', function(event) {
-	event.preventDefault();
-	
-	socket.emit('createMessage', {
-		text: form.message.value
-	}, function() {
+// ============ Event Listeners ======================
 
-	})
-	form.reset();
+
+form.addEventListener('submit', function(event) {
+  event.preventDefault();
+  
+  socket.emit('createMessage', {
+    text: form.message.value
+  }, function() {
+
+  })
+  form.reset();
 });
 
 locationButton.addEventListener('click', function() {
-	if(!navigator.geolocation) {
-		return alert('Geolocation not supported by your current browser.');
-	}
+  if(!navigator.geolocation) {
+    return alert('Geolocation not supported by your current browser.');
+  }
 
-	locationButton.setAttribute('disabled', 'disabled');
-	locationButton.textContent = "Sending..."
+  locationButton.setAttribute('disabled', 'disabled');
+  locationButton.textContent = "Sending..."
 
-	navigator.geolocation.getCurrentPosition(function(position) {
-		locationButton.removeAttribute('disabled');
-		locationButton.textContent = "Share Location"
-		socket.emit('createLocationMessage', {
-			latitude: position.coords.latitude,
-			longitude: position.coords.longitude
-		});
-	}, function() {
-		locationButton.removeAttribute('disabled');
-		locationButton.textContent = "Share Location"
-		alert('Unable to fetch location.');
-	})
+  navigator.geolocation.getCurrentPosition(function(position) {
+    locationButton.removeAttribute('disabled');
+    locationButton.textContent = "Share Location"
+    socket.emit('createLocationMessage', {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    });
+  }, function() {
+    locationButton.removeAttribute('disabled');
+    locationButton.textContent = "Share Location"
+    alert('Unable to fetch location.');
+  })
 
 
 })

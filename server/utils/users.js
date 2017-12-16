@@ -30,6 +30,25 @@ class Users {
 		
 		return namesArray
 	}
+
+	groupUsersByRoom() {
+		let roomsObj = this.users.reduce((rooms, user) => {
+						if(rooms[user.room]) {
+							rooms[user.room]++
+						} else {
+							rooms[user.room] = 1
+						}
+						return rooms
+						}, {})
+		let roomsArray = []
+
+		for(const prop in roomsObj)	{
+			let room = {}
+			room[prop] = roomsObj[prop]
+			roomsArray.push(room)
+		}
+		return roomsArray
+	}
 }
 
 

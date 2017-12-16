@@ -63,5 +63,10 @@ describe('Users', () => {
 		const user = {id: '1', name: 'Mike', room: 'The Office Fans'}
 		expect(chatUsers.getUser('1')).toEqual(user);
 		expect(chatUsers.users.length).toBe(3);
-	});	
+	});
+
+	it('should return array of rooms with value number of users', () => {
+		expect(chatUsers.groupUsersByRoom().length).toBe(2)
+		expect(chatUsers.groupUsersByRoom()).toContainEqual([{'The Office Fans': 2}, {'Psych Fans': 1}])
+	})	
 });

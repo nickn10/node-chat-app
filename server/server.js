@@ -5,7 +5,7 @@ const socketIO = require('socket.io');
 const moment = require('moment');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-const {isRealString} = require('./utils/validation');
+const {isRealString, uniqueUserName} = require('./utils/validation');
 const {Users} = require('./utils/users');
 const publicPath = path.join(__dirname, '../public');
 
@@ -18,14 +18,20 @@ var chatUsers = new Users();
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
+	
+	socket.emit('updateActiveRooms', chatUsers.groupUsersByRoom())
 
 	socket.on('join', (params, callback) => {
 		let name = params.name;
-		let room = params.room;
-
+		let room = params.room.toLowerCase();
+		let roomUsers = chatUsers.getUsersList(room);
 
 		if(!isRealString(name) || !isRealString(room)) {
 			return callback('Name and room are required.')
+		}
+
+		if(uniqueUserName(name, roomUsers).length > 0) {
+			return callback('Username already taken.')
 		}
 
 		socket.join(room)
@@ -41,6 +47,8 @@ io.on('connection', (socket) => {
 		
 		callback();
 	});
+
+
 
 	socket.on('createMessage', (message, callback) => {
 		let user = chatUsers.getUser(socket.id);

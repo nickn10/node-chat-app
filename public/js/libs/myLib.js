@@ -31,3 +31,5 @@ function scrollToBottom() {
     messages.scrollTop = scrollHeight;
   }
 }
+
+
