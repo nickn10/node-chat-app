@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 
 		io.to(room).emit('updateUsersList', chatUsers.getUsersList(room))
 
-		socket.emit('newMessage', generateMessage('Admin','Hello, welcome to ChatApp!'));
+		socket.emit('newMessage', generateMessage('Admin',`Hello, welcome to the room.`));
 		socket.broadcast.to(room).emit('newMessage', generateMessage('Admin', `${name} has joined`));
 		
 		callback();

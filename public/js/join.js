@@ -3,11 +3,6 @@ const activeRooms = document.querySelector('#active-rooms')
 const roomInput = document.getElementsByName('room')
 const form = document.querySelector('#form')
 
-// socket.on('connect', function() {
-// 	socket.emit('newUser', function() {
-// 		console.log('new user');
-// 	})
-// })
 
 socket.on('updateActiveRooms', function(roomslist) {
 	roomslist.forEach(function(room) {
@@ -23,6 +18,5 @@ socket.on('updateActiveRooms', function(roomslist) {
 
 activeRooms.onchange = function() {
 	form.submit()
-
 }
 

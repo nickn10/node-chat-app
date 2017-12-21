@@ -87,6 +87,15 @@ button:disabled {
   display: flex;
 }
 
+.chat__main-header{
+  padding: 0px;
+  margin: 0px;
+  background-color: lightblue;
+  width: 100vw;
+  height: 50px;
+  position: absolute;
+}
+
 .chat__sidebar {
   overflow-y: scroll;
   width: 260px;
@@ -159,7 +168,13 @@ button:disabled {
 }
 
 .message {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 10px;
   padding: 10px;
+  background-color: #2bce8d;
+  border-radius: 10px
 }
 
 .message__title {
